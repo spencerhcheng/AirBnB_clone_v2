@@ -1,10 +1,13 @@
-<img src="https://github.com/johncoleman83/AirBnB_clone/blob/master/dev/HBTN-hbnb-Final.png" width="160" height=auto />
+![HBNB](http://imgur.com/JBCMHDP.png)
 
-# AirBnB Clone Phase #1
+# AirBnB Clone Version 2.0
 
 : python BaseModel Class, unittests, python CLI, & web static
 
-## Description
+### Synopsis
+The objective of the AirBnB Clone project is to learn the fundamental concepts to building a web application similar to AirBnB. AirBnB. AirBnB is an online marketplace and hospitality service, enabling people to lease or rent short-term lodging.
+
+This portion of the project is the first step towards building the full web application; it includes a command interpreter (accessed through a console) for manipulating data and Holberton AirBnB (`HBNB`) objects.
 
 Project attempts to clone the the AirBnB application and website, including the
 database, storage, RESTful API, Web Framework, and Front End.
@@ -12,13 +15,13 @@ database, storage, RESTful API, Web Framework, and Front End.
 ## Environment
 
 * __OS:__ Ubuntu 14.04 LTS
+* __Database__ MySQL 5.7.8-rc
 * __language:__ Python 3.4.3
 * __style:__ PEP 8 (v. 1.7.0)
 
 <img src="https://github.com/johncoleman83/AirBnB_clone/blob/master/dev/hbnb_step5.png" />
 
 ## Testing
-
 
 #### `unittest`
 
@@ -85,6 +88,14 @@ create: create [ARG]
 
   * **update with dictionary:** `<class name>.update(<id>, <dictionary representation>)`
 
+#### Environmental variables
+
+* `HBNB_ENV`: running environment. 
+* `HBNB_MYSQL_USER`: the username
+* `HBNB_MYSQL_PWD`: the password
+* `HBNB_MYSQL_HOST`: the hostname
+* `HBNB_MYSQL_DB`: the database name 
+* `HBNB_TYPE_STORAGE`: the type of storage used.
 
 #### Continuous Integration
 
@@ -95,7 +106,9 @@ github repo
 
 * MJ Johnson, [@mj31508](https://github.com/mj31508)
 * David John Coleman II, [davidjohncoleman.com](http://www.davidjohncoleman.com/)
+* Jared Heck, [@jarehec](https://github.com/jarehec)
+* Spencer Cheng [@spencerhcheng](https://github.com/spencerhcheng)
 
 ## License
 
-Public Domain, no copyright protection
+Public Domain, no copyright protection. Feedback and contributors welcome. Please reach out to any of the authors.
