@@ -2,7 +2,7 @@
 
 # AirBnB Clone Version 2.0
 
-: python BaseModel Class, unittests, python CLI, & web static
+: python BaseModel Class, unittests, python CLI, & web static, MySQL
 
 ### Synopsis
 The objective of the AirBnB Clone project is to learn the fundamental concepts to building a web application similar to AirBnB. AirBnB. AirBnB is an online marketplace and hospitality service, enabling people to lease or rent short-term lodging.
