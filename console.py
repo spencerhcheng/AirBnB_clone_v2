@@ -33,7 +33,7 @@ class HBNBCommand(cmd.Cmd):
     def postloop(self):
         """handles exit to command interpreter"""
         print(".----------------------------.")
-        print("|  Well, that sure was fun!  |")
+        print("|     Exiting the shell...   |")
         print(".----------------------------.")
 
     def default(self, line):
@@ -110,6 +110,12 @@ class HBNBCommand(cmd.Cmd):
             for k, v in CNC.items():
                 if k == arg[0]:
                     my_obj = v()
+                    print(my_obj.id)
+                    for ele in arg[1:]:
+                        ele = ele.split('=')
+                        param = (k, my_obj.id, ele[0],
+                                 str(ele[1].replace("_", " ").replace('"', '\"')))
+                        self.do_update((" ").join(param))
                     my_obj.save()
                     print(my_obj.id)
 
@@ -234,6 +240,7 @@ class HBNBCommand(cmd.Cmd):
         EXAMPLE: update City 1234-abcd-5678-efgh name Chicago
                  City.update(1234-abcd-5678-efgh, name, Chicago)
         """
+        print("arg: {}".format(arg))
         arg_inv = self.__handle_update_err(arg)
         if arg_inv[0]:
             arg = arg_inv[1]
