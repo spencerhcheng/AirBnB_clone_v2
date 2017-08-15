@@ -7,7 +7,7 @@ import json
 import models
 from uuid import uuid4, UUID
 from datetime import datetime
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 
 now = datetime.now
@@ -20,7 +20,7 @@ class BaseModel:
 
     id = Column(String(60), primary_key=True, nullable=False)
     created_at = Column(Datetime, nullable=False, default=datetime.utcnow())
-    updated_at = Column(Datetime, nullable-False, default=datetime.utcnow())
+    updated_at = Column(Datetime, nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """instantiation of new BaseModel Class"""
