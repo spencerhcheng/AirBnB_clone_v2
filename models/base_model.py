@@ -7,13 +7,20 @@ import json
 import models
 from uuid import uuid4, UUID
 from datetime import datetime
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 
 now = datetime.now
 strptime = datetime.strptime
+Base = declarative_base()
 
 
 class BaseModel:
     """attributes and functions for BaseModel class"""
+
+    id = Column(String(60), primary_key=True, nullable=False)
+    created_at = Column(Datetime, nullable=False, default=datetime.utcnow())
+    updated_at = Column(Datetime, nullable-False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """instantiation of new BaseModel Class"""
@@ -22,7 +29,6 @@ class BaseModel:
         else:
             self.id = str(uuid4())
             self.created_at = now()
-            models.storage.new(self)
 
     def __set_attributes(self, d):
         """converts kwargs values to python class attributes"""
@@ -57,8 +63,13 @@ class BaseModel:
     def save(self):
         """updates attribute updated_at to current time"""
         self.updated_at = now()
+        models.storage.new(self)
         models.storage.save()
 
+    def delete(self):
+        """Deletes the current instance"""
+        
+        
     def to_json(self):
         """returns json representation of self"""
         bm_dict = {}
