@@ -2,9 +2,6 @@
 """
 Command interpreter for Holberton AirBnB project
 """
-
-import re
-import shlex
 import cmd
 from models import base_model, user, storage, CNC
 
@@ -113,15 +110,13 @@ class HBNBCommand(cmd.Cmd):
             for k, v in CNC.items():
                 if k == arg[0]:
                     my_obj = v()
+                    print(my_obj.id)
                     for ele in arg[1:]:
-                        if bool(set('=') & set(ele)) is True:
-                            ele = ele.split('=')
-                            param = [k, my_obj.id, ele[0],
-                                     (str(ele[1]))]
-                            param[3] = param[3].replace("_"," ").replace('"', '\"')
-                            param_str = (" ").join(param)
-                            self.do_update(param_str)
-                        my_obj.save()
+                        ele = ele.split('=')
+                        param = (k, my_obj.id, ele[0],
+                                 str(ele[1].replace("_", " ").replace('"', '\"')))
+                        self.do_update((" ").join(param))
+                    my_obj.save()
                     print(my_obj.id)
 
     def do_show(self, arg):
@@ -217,7 +212,7 @@ class HBNBCommand(cmd.Cmd):
         """checks for all errors in update"""
         d = self.__check_dict(arg)
         arg = self.__rreplace(arg, [',', '"'])
-        arg = shlex.split(arg)
+        arg = arg.split()
         error = self.__class_err(arg)
         if not error:
             error += self.__id_err(arg)
@@ -232,10 +227,6 @@ class HBNBCommand(cmd.Cmd):
             elif len(arg) < 4:
                 print(HBNBCommand.ERR[5])
             else:
-                if len(arg) > 5:
-                    str_arg = (" ").join(arg[3:])
-                    del arg[3:]
-                    arg.append(str_arg)
                 return [1, arg, d, fs_o, key]
         return [0]
 
@@ -249,6 +240,7 @@ class HBNBCommand(cmd.Cmd):
         EXAMPLE: update City 1234-abcd-5678-efgh name Chicago
                  City.update(1234-abcd-5678-efgh, name, Chicago)
         """
+        print("arg: {}".format(arg))
         arg_inv = self.__handle_update_err(arg)
         if arg_inv[0]:
             arg = arg_inv[1]
