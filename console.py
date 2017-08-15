@@ -113,14 +113,15 @@ class HBNBCommand(cmd.Cmd):
                 if k == arg[0]:
                     my_obj = v()
                     for ele in arg[1:]:
-                        ele = ele.split('=')
-                        param = [k, my_obj.id, ele[0], (str(ele[1]))]
-                        param[3] = param[3].replace("_",
-                                                    " ").replace('"', '\"')
-                        param_str = (" ").join(param)
-                        self.do_update(param_str)
-                    my_obj.save()
-                    print(my_obj.id)
+                        if "=" in ele:
+                            ele = ele.split('=')
+                            param = [k, my_obj.id, ele[0], (str(ele[1]))]
+                            param[3] = param[3].replace("_",
+                                                        " ").replace('"', '\"')
+                            param_str = (" ").join(param)
+                            self.do_update(param_str)
+                        my_obj.save()
+                        print(my_obj.id)
 
     def do_show(self, arg):
         """show: show [ARG] [ARG1]
