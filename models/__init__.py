@@ -6,6 +6,17 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+import os
+
+if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
+    from db_storage import DBStorage
+    storage = DBStorage()
+    storage.reload()
+
+else:
+    from file_storage import FileStorage
+    storage = FileStorage()
+    storage.reload()
 
 storage = file_storage.FileStorage()
 storage.reload()
