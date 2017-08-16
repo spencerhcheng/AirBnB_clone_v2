@@ -7,7 +7,8 @@ import json
 import models
 from uuid import uuid4, UUID
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float
+from sqlalchemy import Table, MetaData
 from sqlalchemy.ext.declarative import declarative_base
 
 now = datetime.now
