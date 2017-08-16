@@ -27,6 +27,8 @@ class Place(BaseModel, Base):
     latitude = Column(Float, nullable=True)
     longitude = Column(Float, nullable=True)
     amenity_ids = ['', '']
+    amenities = relationship("Amenity", secondary=place_amenity)
+    reviews = relationship("Review", ondelete="CASCADE", backref='place')
 
     def __init__(self, *args, **kwargs):
         """instantiates a new place"""
