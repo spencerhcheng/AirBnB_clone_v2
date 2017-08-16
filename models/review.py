@@ -3,8 +3,10 @@
 Review Class from Models Module
 """
 
-from models.base_model import BaseModel
-
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Table, ForeignKey, MetaData
+from sqlalchemy import String, Integer, Float
+from models.base_model import BaseModel, Base
 
 class Review(BaseModel, Base):
     """Review class handles all application reviews"""

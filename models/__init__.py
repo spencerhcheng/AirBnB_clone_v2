@@ -14,8 +14,8 @@ if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
     storage.reload()
 
 else:
-    from file_storage import FileStorage
-    storage = FileStorage()
+    from models.engine import file_storage
+    storage = file_storage.FileStorage()
     storage.reload()
 
 storage = file_storage.FileStorage()

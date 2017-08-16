@@ -3,7 +3,11 @@
 User Class from Models Module
 """
 
-from models.base_model import BaseModel
+
+from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Table, ForeignKey, MetaData
+from sqlalchemy import String, Integer, Float
+from models.base_model import BaseModel, Base
 
 
 class User(BaseModel, Base):
@@ -14,10 +18,10 @@ class User(BaseModel, Base):
     password = Column(String(128), nullable=False)
     first_name = Column(String(128), nullable=False)
     last_name = Column(String(128), nullable=False)
-    places = relationship('Place', cascade='delete, all,
+    places = relationship('Place', cascade='delete, all,\
                           delete-orphan', backref='user')
 
-    reviews = relationship('Review', cascade='delete, all,
+    reviews = relationship('Review', cascade='delete, all,\
                            delete-orphan', backref='user')
 
     def __init__(self, *args, **kwargs):

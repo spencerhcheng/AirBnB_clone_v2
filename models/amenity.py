@@ -3,8 +3,9 @@
 Amenity Class from Models Module
 """
 
-from models.base_model import BaseModel
-
+from models.base_model import BaseModel, Base
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, Float
+from sqlalchemy.orm import sessionmaker, relationship
 
 class Amenity(BaseModel, Base):
     """Amenity class handles all application amenities"""
@@ -12,7 +13,7 @@ class Amenity(BaseModel, Base):
     __tablename__ = 'amenities'
     name = Column(String(128), nullable=False)
     place_amenities = relationship('place_amenity',
-                                   secondary=Amenity, backref='Place')
+                                   secondary='Amenity', backref='Place')
 
     def __init__(self, *args, **kwargs):
         """instantiates a new amenity"""

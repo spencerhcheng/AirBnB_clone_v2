@@ -3,14 +3,17 @@
 Place Class from Models Module
 """
 
-from models.base_model import BaseModel
+from sqlalchemy import Column, Table, ForeignKey, MetaData
+from sqlalchemy import String, Integer, Float
+from sqlalchemy.orm import relationship
+from models.base_model import BaseModel, Base
 
 
 class Place(BaseModel, Base):
     """Place class handles all application places"""
     place_amenity = Table('place_amenity', Base.metadata,
                           Column('place_id', String(60),
-                                 ForeignKey('places.id'), primary_key=True
+                                 ForeignKey('places.id'), primary_key=True,
                                             nullable=False),
                           Column('amenity_id', String(60),
                                  ForeignKey('amenities.id'), primary_key=True,
