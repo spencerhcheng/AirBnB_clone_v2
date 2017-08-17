@@ -120,8 +120,8 @@ class HBNBCommand(cmd.Cmd):
                                                         " ").replace('"', '\"')
                             param_str = (" ").join(param)
                             self.do_update(param_str)
-                        my_obj.save()
-                        print(my_obj.id)
+                    my_obj.save()
+                    print(my_obj.id)
 
     def do_show(self, arg):
         """show: show [ARG] [ARG1]
