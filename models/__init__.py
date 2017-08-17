@@ -9,7 +9,7 @@ from models.user import User
 import os
 
 if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
-    from db_storage import DBStorage
+    from models.engine.db_storage import DBStorage
     storage = DBStorage()
     storage.reload()
 

@@ -10,18 +10,26 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float
 from sqlalchemy import Table, MetaData
 from sqlalchemy.ext.declarative import declarative_base
+import os
 
 now = datetime.now
 strptime = datetime.strptime
-Base = declarative_base()
 
+if os.environ.get('HBNB_TYPE_STORAGE') == 'db':
+    Base = declarative_base()
+
+else:
+    Base = object
 
 class BaseModel:
     """attributes and functions for BaseModel class"""
-
-    id = Column(String(60), primary_key=True, nullable=False)
-    created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
-    updated_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
+    
+    if os.environ.get('HBNB_TYPE_STORAGE') == 'db':    
+        id = Column(String(60), primary_key=True, nullable=False)
+        created_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
+        updated_at = Column(DateTime, default=datetime.utcnow(), nullable=False)
+    else:
+        __abstract__ = True
 
     def __init__(self, *args, **kwargs):
         """instantiation of new BaseModel Class"""
