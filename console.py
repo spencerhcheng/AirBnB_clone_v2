@@ -107,6 +107,7 @@ class HBNBCommand(cmd.Cmd):
                  City.create()
         """
         arg = arg.split()
+        print("ARG: {}".format(arg))
         error = self.__class_err(arg)
         if not error:
             for k, v in CNC.items():
@@ -248,6 +249,7 @@ class HBNBCommand(cmd.Cmd):
         EXAMPLE: update City 1234-abcd-5678-efgh name Chicago
                  City.update(1234-abcd-5678-efgh, name, Chicago)
         """
+        print("ARG IN DO_UPDATE: {}".format(arg))
         arg_inv = self.__handle_update_err(arg)
         if arg_inv[0]:
             arg = arg_inv[1]

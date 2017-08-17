@@ -5,16 +5,27 @@ import os
 from sqlalchemy import create_engine, MetaData
 from sqlalchemy.orm import sessionmaker
 from models.base_model import BaseModel, Base
+from models.city import City
+from models.amenity import Amenity
+from models.state import State
+from models.user import User
+from models.review import Review
+from models.place import Place
 
-all_objs = ['User', 'State', 'City', 'Amenity', 'Place', 'Review']
 
 class DBStorage:
     __engine = None
     __session = None
+    all_objs = [User, State, City, Amenity, Place, Review]
 
-    def init(self):
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@localhost{}'.format(os.environ.get('HBNB_MYSQL_USER'), os.environ.get('HBNB_MYSQL_PWD'), os.environ.get('HBNB_MYSQL_HOST'), os.environ.get('HBNB_MYSQL_DB')))
-        
+    def __init__(self):
+        env = os.environ
+        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
+                                      format(env['HBNB_MYSQL_USER'],
+                                             env['HBNB_MYSQL_PWD'],
+                                             env['HBNB_MYSQL_HOST'],
+                                             env['HBNB_MYSQL_DB']))
+
         Base.metadata.create_all(self.__engine)
         Session = sessionmaker(bind=self.__engine)
         self.__session = Session()
@@ -37,7 +48,8 @@ class DBStorage:
 
     def delete(self, obj=None):
         if obj is not None:
-            self.__session.delete(obj)
+            del obj
 
     def reload(self):
-        self.__session.refresh(obj)
+        Base.metadata.create_all(self.__engine)
+        self.__session = sessionmaker(bind=self.__engine)
