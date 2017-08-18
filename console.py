@@ -2,8 +2,6 @@
 """
 Command interpreter for Holberton AirBnB project
 """
-
-import shlex
 import cmd
 from models import base_model, user, storage, CNC
 
@@ -106,6 +104,7 @@ class HBNBCommand(cmd.Cmd):
         EXAMPLE: create City
                  City.create()
         """
+        arg_dict = {}
         arg = arg.split()
         error = self.__class_err(arg)
         if not error:
@@ -113,13 +112,31 @@ class HBNBCommand(cmd.Cmd):
                 if k == arg[0]:
                     my_obj = v()
                     for ele in arg[1:]:
-                        if "=" in ele:
-                            ele = ele.split('=')
-                            param = [k, my_obj.id, ele[0], (str(ele[1]))]
-                            param[3] = param[3].replace("_",
-                                                        " ").replace('"', '\"')
-                            param_str = (" ").join(param)
-                            self.do_update(param_str)
+                        ele[1].replace("_", " ").replace('"', '\"')
+                        if "=" not in ele:
+                            try:
+                                if ele[0].isdigit():
+                                    ele[0] = int(ele[0])
+                            except:
+                                pass
+                            try:
+                                ele[0] = float(ele[0])
+                            except:
+                                pass
+                            arg_dict[ele[0]] = None
+                        ele = ele.split('=')
+                        try:
+                            if ele[1].isdigit():
+                                ele[1] = int(ele[0])
+                        except:
+                            pass
+                        try:
+                            ele[0] = float(ele[0])
+                            print(ele[0])
+                        except:
+                            pass
+                        arg_dict[ele[0]] = ele[1]
+                    merger = my_obj.__dict__.update(arg_dict)
                     my_obj.save()
                     print(my_obj.id)
 
@@ -216,7 +233,7 @@ class HBNBCommand(cmd.Cmd):
         """checks for all errors in update"""
         d = self.__check_dict(arg)
         arg = self.__rreplace(arg, [',', '"'])
-        arg = shlex.split(arg)
+        arg = arg.split()
         error = self.__class_err(arg)
         if not error:
             error += self.__id_err(arg)
@@ -231,10 +248,6 @@ class HBNBCommand(cmd.Cmd):
             elif len(arg) < 4:
                 print(HBNBCommand.ERR[5])
             else:
-                if len(arg) > 4:
-                    str_arg = (" ").join(arg[3:])
-                    del arg[3:]
-                    arg.append(str_arg)
                 return [1, arg, d, fs_o, key]
         return [0]
 
