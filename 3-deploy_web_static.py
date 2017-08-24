@@ -3,10 +3,12 @@
 Distributes an archive to web servers
 """
 
+from datetime import datetime
 import tarfile
 from fabric.api import *
 import os
 import sys
+env.use_ssh_config = True
 
 # Server username and hostname
 env.hosts = ['34.207.108.29', '34.229.54.8']
