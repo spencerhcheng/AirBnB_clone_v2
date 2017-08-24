@@ -31,7 +31,7 @@ def do_deploy(archive_path):
         return False
 
     arch_list = archive_path.split("/")
-    arch_name = arch_list[1]
+    arch_name = arch_list[-1]
     arch_name_sans = arch_name.split('.')[0]
 
     if not os.path.exists("{}".format(archive_path)):
@@ -57,7 +57,7 @@ def do_deploy(archive_path):
         return False
 
 
-def do_deploy_web_static():
+def deploy():
     """
     Creates and distributes an archive to webservers
     """
