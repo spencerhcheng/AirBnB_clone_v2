@@ -3,11 +3,7 @@
 Command interpreter for Holberton AirBnB project
 """
 import cmd
-from models import base_model, user, storage, CNC
-
-BaseModel = base_model.BaseModel
-User = user.User
-FS = storage
+from models import storage, CNC
 
 
 class HBNBCommand(cmd.Cmd):
@@ -33,12 +29,13 @@ class HBNBCommand(cmd.Cmd):
     def postloop(self):
         """handles exit to command interpreter"""
         print(".----------------------------.")
-        print("|     Exiting the shell...   |")
+        print("|  Well, that sure was fun!  |")
         print(".----------------------------.")
 
     def default(self, line):
         """default response for unknown commands"""
-        pass
+        print("This \"{}\" is invalid, run \"help\" "
+              "for more explanations".format(line))
 
     def emptyline(self):
         """Called when an empty line is entered in response to the prompt."""
@@ -63,8 +60,8 @@ class HBNBCommand(cmd.Cmd):
             error += 1
             print(HBNBCommand.ERR[2])
         if not error:
-            fs_o = FS.all()
-            for k, v in fs_o.items():
+            storage_objs = storage.all()
+            for k, v in storage_objs.items():
                 temp_id = k.split('.')[1]
                 if temp_id == arg[1] and arg[0] in k:
                     return error
@@ -75,6 +72,7 @@ class HBNBCommand(cmd.Cmd):
     def do_airbnb(self, arg):
         """airbnb: airbnb
         SYNOPSIS: Command changes prompt string"""
+        print("{} type {} split {}".format(arg, type(arg), arg.split()))
         print("                      __ ___                        ")
         print("    _     _  _ _||\ |/  \ | _  _  _|_|_     _  _ _| ")
         print("|_||_)\)/(_|| (_|| \|\__/ || )(_)| |_| )\)/(_|| (_| ")
@@ -97,48 +95,62 @@ class HBNBCommand(cmd.Cmd):
         print()
         return True
 
+    def __isfloat(self, val):
+        """checks if a string may be converted to a float"""
+        try:
+            float(val)
+            return True
+        except:
+            return False
+
+    def __update_val(self, v):
+        """updates string to proper type, either int, float, or
+        string with proper spaces and " symbols"""
+        if v[0] == '"' and v[-1] == '"':
+            v = v[1:-1]
+            v = v.replace('"', '\"')
+            v = v.replace('_', ' ')
+            return v
+        if v.isdigit():
+            v = int(v)
+        elif self.__isfloat(v):
+            v = float(v)
+        return v
+
+    def __create_dict(self, d, arg):
+        """creates dictionary from input paramaters of create() function"""
+        for s in arg:
+            if '=' in s:
+                i = s.index('=')
+                k = s[:i]
+                v = s[(i + 1):]
+                v = self.__update_val(v)
+                d[k] = v
+        return d
+
     def do_create(self, arg):
-        """create: create [ARG]
+        """create: create [ARG] [PARAM 1] [PARAM 2] ...
         ARG = Class Name
+        PARAM = <key name>=<value>
+                value syntax: "<value>"
         SYNOPSIS: Creates a new instance of the Class from given input ARG
-        EXAMPLE: create City
-                 City.create()
+                  and PARAMS. Key in PARAM = an instance attribute.
+        EXAMPLE: create City name="Chicago"
+                 City.create(name="Chicago")
         """
-        arg_dict = {}
         arg = arg.split()
         error = self.__class_err(arg)
-        if not error:
-            for k, v in CNC.items():
-                if k == arg[0]:
-                    my_obj = v()
-                    for ele in arg[1:]:
-                        ele[1].replace("_", " ").replace('"', '\"')
-                        if "=" not in ele:
-                            try:
-                                if ele[0].isdigit():
-                                    ele[0] = int(ele[0])
-                            except:
-                                pass
-                            try:
-                                ele[0] = float(ele[0])
-                            except:
-                                pass
-                            arg_dict[ele[0]] = None
-                        ele = ele.split('=')
-                        try:
-                            if ele[1].isdigit():
-                                ele[1] = int(ele[0])
-                        except:
-                            pass
-                        try:
-                            ele[0] = float(ele[0])
-                            print(ele[0])
-                        except:
-                            pass
-                        arg_dict[ele[0]] = ele[1]
-                    merger = my_obj.__dict__.update(arg_dict)
-                    my_obj.save()
-                    print(my_obj.id)
+        if error:
+            return
+        k = arg[0]
+        class_obj = CNC[k]
+        if len(arg) > 1:
+            d = self.__create_dict({}, arg[1:])
+        else:
+            d = {}
+        my_obj = class_obj(**d)
+        my_obj.save()
+        print(my_obj.id)
 
     def do_show(self, arg):
         """show: show [ARG] [ARG1]
@@ -153,8 +165,8 @@ class HBNBCommand(cmd.Cmd):
         if not error:
             error += self.__id_err(arg)
         if not error:
-            fs_o = FS.all()
-            for k, v in fs_o.items():
+            storage_objs = storage.all()
+            for k, v in storage_objs.items():
                 if arg[1] in k and arg[0] in k:
                     print(v)
 
@@ -169,25 +181,20 @@ class HBNBCommand(cmd.Cmd):
         error = 0
         if arg:
             error = self.__class_err(arg)
-        if not error:
-            print('[', end='')
-            fs_o = FS.all()
-            l = 0
-            if arg:
-                for v in fs_o.values():
-                    if type(v).__name__ == CNC[arg[0]].__name__:
-                        l += 1
-                c = 0
-                for v in fs_o.values():
-                    if type(v).__name__ == CNC[arg[0]].__name__:
-                        c += 1
-                        print(v, end=(', ' if c < l else ''))
-            else:
-                l = len(fs_o)
-                c = 0
-                for v in fs_o.values():
-                    print(v, end=(', ' if c < l else ''))
-            print(']')
+            if error:
+                return
+        print('[', end='')
+        l = 0
+        if arg:
+            storage_objs = storage.all(arg[0])
+        else:
+            storage_objs = storage.all()
+        l = len(storage_objs)
+        c = 0
+        for v in storage_objs.values():
+            c += 1
+            print(v, end=(', ' if c < l else ''))
+        print(']')
 
     def do_destroy(self, arg):
         """destroy: destroy [ARG] [ARG1]
@@ -201,15 +208,17 @@ class HBNBCommand(cmd.Cmd):
         error = self.__class_err(arg)
         if not error:
             error += self.__id_err(arg)
-        if not error:
-            fs_o = FS.all()
-            for k in fs_o.keys():
-                if arg[1] in k and arg[0] in k:
-                    del fs_o[k]
-                    FS.save()
+        if error:
+            return
+        storage_objs = storage.all()
+        for k in storage_objs.keys():
+            if arg[1] in k and arg[0] in k:
+                to_delete = storage_objs[k]
+        to_delete.delete()
+        storage.save()
 
-    def __rreplace(self, s, l):
-        """replaces characters from input list with input string"""
+    def __rremove(self, s, l):
+        """removes characters in the input list from input string"""
         for c in l:
             s = s.replace(c, '')
         return s
@@ -232,23 +241,24 @@ class HBNBCommand(cmd.Cmd):
     def __handle_update_err(self, arg):
         """checks for all errors in update"""
         d = self.__check_dict(arg)
-        arg = self.__rreplace(arg, [',', '"'])
+        arg = self.__rremove(arg, [',', '"'])
         arg = arg.split()
         error = self.__class_err(arg)
         if not error:
             error += self.__id_err(arg)
-        if not error:
-            valid_id = 0
-            fs_o = FS.all()
-            for k in fs_o.keys():
-                if arg[1] in k and arg[0] in k:
-                    key = k
-            if len(arg) < 3:
-                print(HBNBCommand.ERR[4])
-            elif len(arg) < 4:
-                print(HBNBCommand.ERR[5])
-            else:
-                return [1, arg, d, fs_o, key]
+        if error:
+            return [0]
+        valid_id = 0
+        storage_objs = storage.all()
+        for k in storage_objs.keys():
+            if arg[1] in k and arg[0] in k:
+                key = k
+        if len(arg) < 3:
+            print(HBNBCommand.ERR[4])
+        elif len(arg) < 4:
+            print(HBNBCommand.ERR[5])
+        else:
+            return [1, arg, d, storage_objs, key]
         return [0]
 
     def do_update(self, arg):
@@ -260,23 +270,24 @@ class HBNBCommand(cmd.Cmd):
         SYNOPSIS: updates or adds a new attribute and value of given Class
         EXAMPLE: update City 1234-abcd-5678-efgh name Chicago
                  City.update(1234-abcd-5678-efgh, name, Chicago)
+                 City.update(1234-abcd, {'name': 'Chicago', 'address': 'None'})
         """
         arg_inv = self.__handle_update_err(arg)
         if arg_inv[0]:
             arg = arg_inv[1]
             d = arg_inv[2]
-            fs_o = arg_inv[3]
+            storage_objs = arg_inv[3]
             key = arg_inv[4]
             if not d:
                 avalue = arg[3].strip('"')
                 if avalue.isdigit():
                     avalue = int(avalue)
-                fs_o[key].bm_update(arg[2], avalue)
+                storage_objs[key].bm_update(arg[2], avalue)
             else:
                 for k, v in d.items():
                     if v.isdigit():
                         v = int(v)
-                    fs_o[key].bm_update(k, v)
+                    storage_objs[key].bm_update(k, v)
 
     def do_BaseModel(self, arg):
         """class method with .function() syntax
@@ -316,9 +327,9 @@ class HBNBCommand(cmd.Cmd):
     def __count(self, arg):
         """counts the number objects in File Storage"""
         args = arg.split()
-        fs_o = FS.all()
+        storage_objs = storage.all()
         count = 0
-        for k in fs_o.keys():
+        for k in storage_objs.keys():
             if args[0] in k:
                 count += 1
         print(count)
@@ -340,7 +351,7 @@ class HBNBCommand(cmd.Cmd):
             for k, v in CMD_MATCH.items():
                 if k == check[0]:
                     if ((',' or '"' in new_arg) and k != '.update'):
-                        new_arg = self.__rreplace(new_arg, ['"', ','])
+                        new_arg = self.__rremove(new_arg, ['"', ','])
                     v(new_arg)
                     return
         self.default(arg)
