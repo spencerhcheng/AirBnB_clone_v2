@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # Starts flask web app to serve AirBnB content
 from flask import Flask, render_template
+from models import storage
 app = Flask(__name__)
 app.url_map.strict_slashes = False
 
