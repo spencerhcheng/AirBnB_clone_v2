@@ -90,6 +90,19 @@ class HBNBCommand(cmd.Cmd):
         """
         return True
 
+    def do_all_cities(self, arg):
+        """
+        displays all City objects linked to the current State
+        all_cities [State]
+        """
+        print("\n\n\n")
+        
+        for obj in storage.all('State').values():
+            print ("obj: {}, \n\n obj.__dict__: {} \n\n dir(obj): {}".format(obj, obj.__dict__, dir(obj)))
+        print("\n\n\n\n")
+        print("Self attrs: {}".format(dir(self)))    
+
+    
     def do_EOF(self, line):
         """function to handle EOF"""
         print()
@@ -266,8 +279,6 @@ class HBNBCommand(cmd.Cmd):
         ARG = Class
         ARG1 = ID #
         ARG2 = attribute name
-        ARG3 = value of new attribute
-        SYNOPSIS: updates or adds a new attribute and value of given Class
         EXAMPLE: update City 1234-abcd-5678-efgh name Chicago
                  City.update(1234-abcd-5678-efgh, name, Chicago)
                  City.update(1234-abcd, {'name': 'Chicago', 'address': 'None'})
