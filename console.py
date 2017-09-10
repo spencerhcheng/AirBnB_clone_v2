@@ -90,19 +90,6 @@ class HBNBCommand(cmd.Cmd):
         """
         return True
 
-    def do_all_cities(self, arg):
-        """
-        displays all City objects linked to the current State
-        all_cities [State]
-        """
-        print("\n\n\n")
-        
-        for obj in storage.all('State').values():
-            print ("obj: {}, \n\n obj.__dict__: {} \n\n dir(obj): {}".format(obj, obj.__dict__, dir(obj)))
-        print("\n\n\n\n")
-        print("Self attrs: {}".format(dir(self)))    
-
-    
     def do_EOF(self, line):
         """function to handle EOF"""
         print()
