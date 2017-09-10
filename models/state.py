@@ -18,3 +18,12 @@ class State(BaseModel, Base):
                               backref='state')
     else:
         name = ''
+
+    @property
+    def cities(self):
+        """
+        Returns list of City objects from storage
+        """
+        for city_ob in storage.all('State').values():
+            if city_obj.state_id == self.id:
+                return cities
