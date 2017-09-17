@@ -24,6 +24,8 @@ class State(BaseModel, Base):
         """
         Returns list of City objects from storage
         """
-        for city_ob in storage.all('State').values():
+        all_cities = []
+        for city_ob in storage.all('City').values():
             if city_obj.state_id == self.id:
-                return cities
+                all_cities.append(city_obj)
+            return (all_cities)

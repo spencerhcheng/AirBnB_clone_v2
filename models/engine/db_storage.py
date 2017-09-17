@@ -111,7 +111,5 @@ class DBStorage:
         self.__session.rollback()
 
     def close(self):
-        """
-        calls remove method on session
-        """
+        """calls remove method on private session attribute self.__session"""
         self.__session.remove()
