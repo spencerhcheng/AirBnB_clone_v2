@@ -19,13 +19,13 @@ class State(BaseModel, Base):
     else:
         name = ''
 
-    @property
-    def cities(self):
-        """
-        Returns list of City objects from storage
-        """
-        all_cities = []
-        for city_ob in storage.all('City').values():
-            if city_obj.state_id == self.id:
-                all_cities.append(city_obj)
-        return (all_cities)
+        @property
+        def cities(self):
+            """
+            Returns list of City objects from storage
+            """
+            all_cities = []
+            for city_ob in storage.all('City').values():
+                if city_obj.state_id == self.id:
+                    all_cities.append(city_obj)
+            return (all_cities)
