@@ -5,6 +5,7 @@ State Class from Models Module
 
 from os import environ
 from models.base_model import BaseModel, Base, Column, String, relationship
+from models import storage
 
 
 class State(BaseModel, Base):
@@ -25,7 +26,7 @@ class State(BaseModel, Base):
             Returns list of City objects from storage
             """
             all_cities = []
-            for city_ob in storage.all('City').values():
+            for city_obj in storage.all('City').values():
                 if city_obj.state_id == self.id:
                     all_cities.append(city_obj)
             return (all_cities)
